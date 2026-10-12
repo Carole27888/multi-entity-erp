@@ -73,11 +73,11 @@ def builtin_role(org, key: str):
 
 @transaction.atomic
 def create_organization(owner, name: str, *, country: str = "KE", currency: str = "KES", timezone_name: str = "Africa/Nairobi",
-                        brand_colour: str = "#134E4A", slug: str | None = None, request=None, **extra) -> Organization:
+                        brand_colour: str | None = None, slug: str | None = None, request=None, **extra) -> Organization:
     from apps.billing.models import Plan
 
     org = Organization(name=name.strip(), slug=slug or unique_slug(name), country_id=country, currency=currency,
-                       timezone=timezone_name, brand_colour=brand_colour, **extra)
+                       timezone=timezone_name, brand_colour=brand_colour or settings.BRAND_COLOUR, **extra)
     org.plan = Plan.objects.filter(key=settings.TRIAL_PLAN).first()
     org.start_trial()
     org.save()

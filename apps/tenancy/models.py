@@ -23,7 +23,11 @@ RESERVED_SLUGS = {
 
 slug_validator = RegexValidator(r"^[a-z0-9](?:[a-z0-9-]{0,48}[a-z0-9])?$",
                                 "Use 2–50 lowercase letters, numbers or hyphens, starting and ending with a letter or number.")
-colour_validator = RegexValidator(r"^#[0-9A-Fa-f]{6}$", "Use a hex colour like #134E4A.")
+colour_validator = RegexValidator(r"^#[0-9A-Fa-f]{6}$", "Use a hex colour like #4F46E5.")
+
+
+def default_brand_colour():
+    return settings.BRAND_COLOUR
 
 
 def org_logo_path(instance, filename):
@@ -60,7 +64,7 @@ class Organization(TimeStampedModel):
     currency = models.CharField(max_length=3, default="KES")
     timezone = models.CharField(max_length=64, default="Africa/Nairobi")
     logo = models.ImageField(upload_to=org_logo_path, blank=True)
-    brand_colour = models.CharField(max_length=7, default="#134E4A", validators=[colour_validator])
+    brand_colour = models.CharField(max_length=7, default=default_brand_colour, validators=[colour_validator])
     email = models.EmailField(blank=True)
     phone = models.CharField(max_length=20, blank=True)
     address = models.CharField(max_length=255, blank=True)

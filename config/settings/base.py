@@ -13,8 +13,8 @@ environ.Env.read_env(str(BASE_DIR / ".env"))
 
 # --- Product & platform ------------------------------------------------------
 # The product name, domains and the platform company are settings so they can change without code edits.
-PRODUCT_NAME = env("PRODUCT_NAME", default="[PRODUCT NAME]")
-PRODUCT_TAGLINE = env("PRODUCT_TAGLINE", default="Run your whole business in one place")
+PRODUCT_NAME = env("PRODUCT_NAME", default="Pamoja")
+PRODUCT_TAGLINE = env("PRODUCT_TAGLINE", default="Your whole business, together")
 PLATFORM_DOMAIN = env("PLATFORM_DOMAIN", default="domain.co.ke")
 # Host of the staff app. Tenants live under it at /<org-slug>/ (TENANT_ROUTING=path).
 APP_HOST = env("APP_HOST", default=f"app.{PLATFORM_DOMAIN}")
@@ -196,7 +196,7 @@ JOBS_RUN_TIME_LIMIT = env.int("JOBS_RUN_TIME_LIMIT", default=240)  # seconds per
 
 # --- PWA -------------------------------------------------------------------
 PWA_VERSION = env("PWA_VERSION", default="1")
-BRAND_COLOUR = env("BRAND_COLOUR", default="#134E4A")  # platform colour; each organization sets its own
+BRAND_COLOUR = env("BRAND_COLOUR", default="#4F46E5")  # platform colour; each organization sets its own
 
 # --- Trial & plans -----------------------------------------------------------
 TRIAL_DAYS = env.int("TRIAL_DAYS", default=14)

@@ -8,10 +8,10 @@
     {% include "components/field.html" with field=form.country %}
     {% include "components/field.html" with field=form.currency %}
     {% include "components/field.html" with field=form.timezone %}
-    <div class="field{% if form.brand_colour.errors %} field--invalid{% endif %}" x-data="{ c: '{{ form.brand_colour.value|default:'#134E4A' }}' }">
+    <div class="field{% if form.brand_colour.errors %} field--invalid{% endif %}" x-data="{ c: '{{ form.brand_colour.value|default:'#4F46E5' }}' }">
       <label for="{{ form.brand_colour.id_for_label }}">{{ form.brand_colour.label }}</label>
       <div class="colour-row">
-        <input type="color" name="{{ form.brand_colour.html_name }}" id="{{ form.brand_colour.id_for_label }}" x-model="c" value="{{ form.brand_colour.value|default:'#134E4A' }}">
+        <input type="color" name="{{ form.brand_colour.html_name }}" id="{{ form.brand_colour.id_for_label }}" x-model="c" value="{{ form.brand_colour.value|default:'#4F46E5' }}">
         <span class="brand-preview flex-1" :style="'background:' + c"><span class="btn btn--sm" style="background: var(--c-white); color: var(--c-text);">Preview</span></span>
       </div>
       {% for e in form.brand_colour.errors %}<span class="field__error">{{ e }}</span>{% endfor %}

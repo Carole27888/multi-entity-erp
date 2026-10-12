@@ -1,10 +1,10 @@
 # PLAN
 
-Build plan for **[PRODUCT NAME]** (working name until you choose one): a multi-industry, multi-tenant ERP + CRM + public website + customer portal, sold as a subscription.
+Build plan for **Pamoja** (working name until you choose one): a multi-industry, multi-tenant ERP + CRM + public website + customer portal, sold as a subscription.
 
 Reference implementation: `/home/carole/Downloads/RealityBorisEPR` (read-only). Its patterns are reused: the module registry, the database job runner, the settings split, TOTP login, the double-entry finance module, WeasyPrint documents, backups and monitoring, the importers, data protection and the design tokens. What changes is that **every one of those is now per organization**, and a **pack registry** sits above the module registry.
 
-Status: **draft, waiting for approval.** Open questions are in [§9](#9-open-questions-business-decisions).
+Status: **approved 12 Oct 2026. Phase 1 is done (13 Oct 2026); Phase 2 is next.** The owner's answers are in [§9](#9-business-decisions-answered); the progress log is in [§10](#10-progress).
 
 ---
 
@@ -421,9 +421,41 @@ Then: the document engine, invoice and receipt PDFs in the reference style, and 
 - **MySQL JSON lookups and case sensitivity.** The suite must be run on MySQL before phase 3 closes, and the collation (`utf8mb4_unicode_ci`) is documented.
 - **Custom domains on shared hosting** need manual cPanel steps, which the runbook covers.
 
-## 9. Open questions (business decisions)
-1. **Product name and domain.** Needed for the app host (`app.<domain>`), public subdomains (`<slug>.<domain>`), email sender and PWA name. Placeholders are used until then; everything reads from settings.
-2. **Card payment provider priority:** Paystack, Flutterwave or Stripe first? (All three will be mocked; this decides which real adapter is built and tested first.) M-PESA is assumed to be first overall.
-3. **Platform company details for SaaS invoices:** legal name, KRA PIN, VAT registration and the platform's own paybill/till. Needed in phase 8; placeholders until then.
-4. **Plans:** initial plan names, prices (KES / USD) and limits. A Starter / Growth / Business draft will be used otherwise.
-5. **Public subdomains:** will your hosting give a wildcard DNS record and wildcard SSL for `*.<domain>`? If not, the public site uses the `/s/<slug>/` fallback until each tenant connects a custom domain.
+## 9. Business decisions (answered)
+1. **Name and domain:** Pamoja at [domain.co.ke], kept in settings.
+2. **Payments:** M-PESA (Daraja) first overall, then Paystack, then Flutterwave. Stripe stays mocked.
+3. **Platform company:** `.env` placeholders (`PLATFORM_LEGAL_NAME`, `PLATFORM_KRA_PIN`, `PLATFORM_VAT_REGISTERED`, `PLATFORM_PAYBILL`). Real values are due before Phase 8.
+4. **Plans** are seeded in the database and editable in admin:
+
+   | Plan | KES / month | Users | Includes |
+   |---|---|---|---|
+   | Starter | 2,500 | 3 | 1 pack, `/s/<slug>/` site, 2 GB |
+   | Growth | 7,500 | 10 | custom domain, customer portal, 10 GB |
+   | Business | 20,000 | 30 | partner portal, API and webhooks, 50 GB |
+
+   The trial is 14 days with Growth features, and annual billing gets 2 months free.
+5. **Wildcard subdomains:** off by default (`WILDCARD_SUBDOMAINS=False`), with `/s/<slug>/` as the default public address. The README lists what to ask the host for.
+
+## 10. Progress
+
+### Phase 1: done (13 Oct 2026)
+
+**What was built:**
+- the `config/` settings split, the tenant-aware job runner, the design system with per-organization brand colours, and the PWA
+- tenancy: fail-closed managers, path / subdomain / custom-domain routing, and permission-checked files
+- accounts with TOTP, backup codes, rate limits, idle and maximum session limits, and password reset
+- built-in and custom roles with a permission matrix and record scopes
+- sign-up with email verification (phone OTP once SMS is live) and the 7-step resumable wizard
+- the pack registry with all 19 packs, terminology, the custom-field engine and the getting-started checklist
+- the settings screens (profile and branding, modules, team and invitations, roles, departments)
+- the platform admin shell (organizations, suspend and restore, impersonation)
+- `seed_demo --pack/--reset`
+
+**Results:**
+- `pytest`: 170 passed on SQLite. This includes the URL-walking isolation suite, one smoke test per pack and `check --deploy`.
+- Screenshots: 24 screens at 1280px and 390px are in `screenshots/phase1/` (gitignored). No horizontal scroll at 390px.
+
+**Carried forward:**
+- The suite has not been run on MySQL or PostgreSQL yet. Both servers are installed on the development machine, but no credentials were available. This needs a test user (see the Phase 2 report).
+- Moved to Phase 2: the screens for custom fields and terminology overrides, and the sample-data loaders (organizations that asked for sample data are flagged).
+- Moved to Phase 5: the public-image view and self-service custom-domain verification.

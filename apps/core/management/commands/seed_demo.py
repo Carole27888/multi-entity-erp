@@ -25,6 +25,8 @@ PLATFORM_EMAIL = "platform@demo.co.ke"
 MULTI_EMAIL = "wanjiku@demo.co.ke"
 
 # pack: (name, slug, sub-niche, brand colour, phone, address, owner name)
+# Demo organizations use the platform colour (settings.BRAND_COLOUR) so the default look is what you see;
+# each organization can pick its own under Settings › Profile & branding.
 DEMO_ORGS = {
     "tourism": ("Savannah Trails Safaris", "savannah-trails", "tour_operator", "#9A3412", "+254722410300",
                 "Lavington Green, James Gichuru Road, Nairobi", "Daniel Ole Sankale"),
@@ -157,7 +159,7 @@ class Command(BaseCommand):
         owner = self._user(f"owner@{domain}", owner_name, password, phone)
         org = Organization.objects.filter(slug=slug).first()
         if org is None:
-            org = create_organization(owner, name, slug=slug, brand_colour=colour, phone=phone, address=address,
+            org = create_organization(owner, name, slug=slug, phone=phone, address=address,
                                       email=f"info@{domain}", legal_name=f"{name} Ltd")
         apply_pack(org, key, sub, primary=True)
         org.refresh_from_db()

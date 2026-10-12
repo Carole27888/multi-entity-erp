@@ -18,7 +18,9 @@ def _has_logo(org, request):
 
 
 def _has_brand(org, request):
-    return org.brand_colour.upper() != "#134E4A"
+    from django.conf import settings
+
+    return org.brand_colour.upper() != settings.BRAND_COLOUR.upper()
 
 
 def _invited(org, request):

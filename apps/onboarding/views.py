@@ -7,6 +7,7 @@ last, when the industry pack is applied and the 14-day trial is already running.
 
 from contextlib import nullcontext
 
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
@@ -63,8 +64,6 @@ def signup(request):
 
 
 def _signup_limit():
-    from django.conf import settings
-
     return settings.SIGNUP_RATE_LIMIT
 
 
@@ -202,7 +201,8 @@ def _business(request, session):
         initial = {"name": org.name, "country": org.country_id, "currency": org.currency, "timezone": org.timezone,
                    "brand_colour": org.brand_colour}
     else:
-        initial = {"country": "KE", "currency": "KES", "timezone": "Africa/Nairobi", "brand_colour": "#134E4A"}
+        initial = {"country": "KE", "currency": "KES", "timezone": "Africa/Nairobi",
+                   "brand_colour": settings.BRAND_COLOUR}
     form = BusinessForm(request.POST or None, request.FILES or None, initial=initial)
     if request.method == "POST" and form.is_valid():
         d = form.cleaned_data

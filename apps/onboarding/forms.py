@@ -67,7 +67,7 @@ class BusinessForm(forms.Form):
     currency = forms.ChoiceField()
     timezone = forms.ChoiceField(label="Time zone")
     logo = forms.ImageField(required=False, help_text=f"PNG, JPG or WebP, up to {LOGO_MAX_MB} MB. You can add it later.")
-    brand_colour = forms.CharField(max_length=7, initial="#134E4A", label="Brand colour",
+    brand_colour = forms.CharField(max_length=7, label="Brand colour",
                                    validators=[RegexValidator(r"^#[0-9A-Fa-f]{6}$", "Pick a colour.")],
                                    widget=forms.TextInput(attrs={"type": "color"}))
 

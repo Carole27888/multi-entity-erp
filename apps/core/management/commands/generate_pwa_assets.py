@@ -17,7 +17,7 @@ from apps.core import pwa
 
 GREEN = pwa.THEME_COLOR  # the platform brand colour (settings.BRAND_COLOUR)
 WHITE = "#FFFFFF"
-SOFT = "#CCE3E0"
+SOFT = "#D9D8E8"
 
 
 def static_root() -> Path:

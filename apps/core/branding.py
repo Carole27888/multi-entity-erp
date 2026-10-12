@@ -10,7 +10,7 @@ import colorsys
 import re
 
 HEX = re.compile(r"^#?([0-9a-fA-F]{6})$")
-DEFAULT = "#134E4A"
+DEFAULT = "#4F46E5"
 
 
 def _rgb(hex_colour: str) -> tuple[float, float, float]:
@@ -55,10 +55,10 @@ def palette(brand: str) -> dict[str, str]:
     base = _rgb(brand)
     primary = darken_until(base, ratio=4.5)  # white button text stays readable
     h, l_, s = colorsys.rgb_to_hls(*primary)
-    sidebar = darken_until(_with_lightness(primary, l_ * 0.82), ratio=7)
-    hover = colorsys.hls_to_rgb(h, min(l_ + 0.08, 0.6), s)
-    if contrast(_hex(hover), "#FFFFFF") < 4.5:
-        hover = darken_until(hover, ratio=4.5)
+    # Sidebar: always a deep shade of the brand (lightness ~0.2, a little less saturated), whatever the colour.
+    sidebar = darken_until(colorsys.hls_to_rgb(h, min(l_, 0.2), s * 0.65), ratio=7)
+    # Hover: visibly darker than the button, so it still passes on white text.
+    hover = colorsys.hls_to_rgb(h, max(l_ - 0.08, 0.08), s)
     soft = _with_lightness(base, 0.94, 0.7)
     light = _with_lightness(base, 0.78, 0.6)
     sidebar_text = _with_lightness(base, 0.88, 0.35)
