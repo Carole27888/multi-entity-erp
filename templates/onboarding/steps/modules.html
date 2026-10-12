@@ -1,0 +1,18 @@
+{% extends "onboarding/_wizard.html" %}
+{% block step_title %}Choose your modules{% endblock %}
+{% block step_sub %}We've ticked what {% if pack %}{{ pack.name|lower }} businesses{% else %}most businesses{% endif %} use. Change anything now or later in Settings.{% endblock %}
+{% block step %}
+{% regroup rows by group as groups %}
+{% for g in groups %}
+  <h2 class="mt-4 mb-2">{% if g.grouper == "suggested" %}Suggested for you{% elif g.grouper == "optional" %}Often useful{% else %}Everything else{% endif %}</h2>
+  <div class="option-grid">
+    {% for r in g.list %}
+      <label class="option-card option-card--check{% if r.locked %} is-locked{% endif %}">
+        <input type="checkbox" name="modules" value="{{ r.entry.key }}"{% if r.entry.key in form.modules.value %} checked{% endif %}{% if r.locked %} disabled{% endif %}>
+        <span class="option-card__icon">{% include "components/icon.html" with name=r.entry.icon size=20 %}</span>
+        <span><span class="option-card__title block">{{ r.entry.name }}</span><span class="option-card__desc block">{{ r.entry.description }}{% if r.locked %} Needs a higher plan.{% endif %}</span></span>
+      </label>
+    {% endfor %}
+  </div>
+{% endfor %}
+{% endblock %}

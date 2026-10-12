@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-header">
+  <div><h1>{{ role.name }}</h1><p class="page-header__sub">{{ role.description }} Built-in roles can't be changed.</p></div>
+  <div class="page-header__actions"><a class="btn btn--primary" href="{% url 'orgsettings:role_new' %}?from={{ role.pk }}">Duplicate as a custom role</a></div>
+</div>
+<div class="grid-4 kpis-2up section">
+  {% include "components/kpi_card.html" with label="Records" value=role.get_default_scope_display text_value=True icon="eye" %}
+  {% include "components/kpi_card.html" with label="Two-factor login" value=role.two_factor_required|yesno:"Required,Optional" text_value=True icon="shield" %}
+  {% include "components/kpi_card.html" with label="Idle sign-out" value=role.idle_timeout_minutes|default:"Never"|stringformat:"s" text_value=True icon="clock" %}
+  {% include "components/kpi_card.html" with label="Longest sign-in" value=role.session_max_hours|default:"30 days"|stringformat:"s" text_value=True icon="lock" %}
+</div>
+{% include "orgsettings/_matrix.html" %}
+{% endblock %}

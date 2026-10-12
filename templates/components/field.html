@@ -1,0 +1,24 @@
+{# {% include "components/field.html" with field=form.x span=True %} — password fields get a show/hide eye button. #}
+<div class="field{% if field.errors %} field--invalid{% endif %}{% if span %} span-2{% endif %}">
+  {% if field.field.widget.input_type == "checkbox" %}
+    <label class="check">{{ field }} {{ field.label }}</label>
+  {% elif field.field.widget.input_type == "password" %}
+    <label for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %} <span class="text-danger" aria-hidden="true">*</span>{% endif %}</label>
+    <div class="password-field" x-data="{ show: false }">
+      <input type="password" :type="show ? 'text' : 'password'" name="{{ field.html_name }}" id="{{ field.id_for_label }}"
+             autocomplete="{{ field.field.widget.attrs.autocomplete|default:'current-password' }}"{% if field.field.required %} required{% endif %}
+             {% if field.errors %}aria-invalid="true"{% endif %}{% if field.help_text %} aria-describedby="{{ field.id_for_label }}_help"{% endif %}>
+      <button type="button" class="password-field__toggle" @click="show = !show" :aria-label="show ? 'Hide password' : 'Show password'" aria-label="Show password" :aria-pressed="show.toString()">
+        <span x-show="!show">{% include "components/icon.html" with name="eye" size=20 %}</span>
+        <span x-show="show" x-cloak>{% include "components/icon.html" with name="eye-off" size=20 %}</span>
+      </button>
+    </div>
+  {% elif field.field.widget.input_type == "radio" or field.field.widget.allow_multiple_selected and field.field.widget.input_type == "checkbox" %}
+    <fieldset class="choice-list"><legend>{{ field.label }}</legend>{{ field }}</fieldset>
+  {% else %}
+    <label for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %} <span class="text-danger" aria-hidden="true">*</span>{% endif %}</label>
+    {{ field }}
+  {% endif %}
+  {% if field.help_text %}<span class="field__help" id="{{ field.id_for_label }}_help">{{ field.help_text }}</span>{% endif %}
+  {% for error in field.errors %}<span class="field__error">{{ error }}</span>{% endfor %}
+</div>

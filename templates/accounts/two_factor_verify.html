@@ -1,0 +1,15 @@
+{% extends "base_auth.html" %}
+{% block title %}Authenticator code{% endblock %}
+{% block card %}
+<div class="card auth-box">
+  <h1>Enter your code</h1>
+  <p class="page-header__sub mb-4">Open your authenticator app (Google Authenticator, Microsoft Authenticator, Authy…) and enter the 6-digit code for <b>{{ email }}</b>.</p>
+  <form method="post" novalidate class="stack" style="gap: 14px;">
+    {% csrf_token %}
+    {% include "components/field.html" with field=form.code %}
+    <button type="submit" class="btn btn--primary btn--block">Verify and sign in</button>
+  </form>
+  <p class="text-sm text-muted mt-4">Lost your phone? Type one of your backup codes (like <code>k7m2-9xq4</code>) instead, or ask your administrator to reset your two-factor login.</p>
+  <p class="text-sm mt-2"><a href="{% url 'accounts:login' %}">← Back to sign in</a></p>
+</div>
+{% endblock %}

@@ -1,0 +1,10 @@
+{# with steps=[{label, done, current}] large #}
+<ol class="stepper{% if large %} stepper--lg{% endif %}" aria-label="Progress">
+  {% for step in steps %}
+    <li class="stepper__step{% if step.done %} is-done{% endif %}{% if step.current %} is-current{% endif %}">
+      <span class="stepper__dot" title="{{ step.label }}">{% if large %}{% if step.done %}{% include "components/icon.html" with name="check" size=16 stroke="3" %}{% else %}{{ forloop.counter }}{% endif %}{% endif %}</span>
+      <span class="visually-hidden">{{ step.label }}{% if step.done %} (done){% endif %}</span>
+      {% if not forloop.last %}<span class="stepper__line" aria-hidden="true"></span>{% endif %}
+    </li>
+  {% endfor %}
+</ol>

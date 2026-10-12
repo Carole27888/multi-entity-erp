@@ -1,0 +1,21 @@
+{# Organization switcher: lists the user's organizations; the current one is ticked. #}
+<div class="dropdown org-switcher" x-data="{ open: false }" @click.outside="open = false" @keydown.escape="open = false">
+  <button type="button" class="org-switcher__btn" @click="open = !open" :aria-expanded="open" aria-haspopup="menu" aria-label="Switch organization">
+    {% include "components/icon.html" with name="repeat" size=16 %}
+    <span class="truncate hide-mobile">{% if org %}{{ org.name }}{% else %}Organizations{% endif %}</span>
+  </button>
+  <div class="dropdown__menu dropdown__menu--wide" role="menu" x-show="open" x-cloak x-transition>
+    <div class="dropdown__label">Your organizations</div>
+    {% for m in switcher %}
+      <a class="dropdown__item" role="menuitem" href="{% org_url m.organization %}">
+        <span class="org-chip" aria-hidden="true">{{ m.organization.initials }}</span>
+        <span class="flex-1 truncate">{{ m.organization.name }}<span class="block text-xs text-muted">{{ m.role.name }}{% if not m.organization.onboarding_completed_at %} · set-up in progress{% endif %}</span></span>
+        {% if org and m.organization_id == org.pk %}{% include "components/icon.html" with name="check" size=16 %}{% endif %}
+      </a>
+    {% empty %}
+      <div class="text-sm text-muted" style="padding: 8px 12px;">No organizations yet.</div>
+    {% endfor %}
+    <div class="dropdown__divider"></div>
+    <a class="dropdown__item" role="menuitem" href="{% gurl 'onboarding:start' %}?new=1">{% include "components/icon.html" with name="plus" size=18 %} Create an organization</a>
+  </div>
+</div>

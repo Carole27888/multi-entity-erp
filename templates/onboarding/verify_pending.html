@@ -1,0 +1,9 @@
+{% extends "accounts/_simple_card.html" %}
+{% block title %}Confirm your email{% endblock %}
+{% block heading %}Check your inbox{% endblock %}
+{% block inner %}
+<p>We sent a link to <b>{{ request.user.email }}</b>. Open it to confirm your email and set up your business.</p>
+<p class="text-sm text-muted">The link works for 3 days. No email? Check your spam folder, or send it again.</p>
+<form method="post" class="mt-3">{% csrf_token %}<button type="submit" class="btn btn--secondary btn--block">{% include "components/icon.html" with name="send" size=16 %} Send the link again</button></form>
+<form method="post" action="{% url 'accounts:logout' %}" class="mt-2">{% csrf_token %}<button type="submit" class="btn btn--ghost btn--block">Use a different email</button></form>
+{% endblock %}

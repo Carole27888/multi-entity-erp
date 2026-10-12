@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+{% include "components/page_header.html" with title="Modules" subtitle="Switch modules on or off for everyone. Turning one off hides it; no data is deleted." %}
+<form method="post">{% csrf_token %}
+<div class="option-grid">
+  {% for r in rows %}
+    <label class="option-card option-card--check{% if r.locked %} is-locked{% endif %}">
+      <input type="checkbox" name="modules" value="{{ r.entry.key }}"{% if r.enabled %} checked{% endif %}{% if r.locked or not can_edit %} disabled{% endif %}>
+      <span class="option-card__icon">{% include "components/icon.html" with name=r.entry.icon size=20 %}</span>
+      <span>
+        <span class="option-card__title block">{{ r.entry.name }}{% if not r.built %} <span class="soon">Coming soon</span>{% endif %}</span>
+        <span class="option-card__desc block">{{ r.entry.description }}{% if r.locked %} <b>Needs a higher plan.</b>{% endif %}</span>
+      </span>
+    </label>
+  {% endfor %}
+</div>
+{% if can_edit %}<div class="mt-4"><button type="submit" class="btn btn--primary">Save modules</button></div>{% endif %}
+</form>
+{% endblock %}

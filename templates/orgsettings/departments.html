@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+{% include "components/page_header.html" with title="Departments" subtitle="Managers with “Their department's records” see what their department's people own." %}
+<div class="grid-main-side" style="align-items: start;">
+  <div class="card">
+    {% if items %}
+      <ul class="list">
+        {% for d in items %}
+          <li class="list__item">
+            <div class="list__main"><div class="list__title">{{ d.name }}</div><div class="list__sub">{{ d.people }} {{ d.people|pluralize:"person,people" }}</div></div>
+            <form method="post" action="{% url 'orgsettings:department_delete' d.pk %}">{% csrf_token %}<button class="btn btn--sm btn--ghost" type="submit" aria-label="Delete {{ d.name }}">{% include "components/icon.html" with name="trash" size=16 %}</button></form>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}{% include "components/empty_state.html" with title="No departments yet" message="Add your first one on the right." icon="columns" %}{% endif %}
+  </div>
+  <div class="card">
+    <div class="card__header"><h2 class="card__title">Add a department</h2></div>
+    <form method="post" novalidate class="stack">{% csrf_token %}
+      {% include "components/field.html" with field=form.name %}
+      <button class="btn btn--primary" type="submit">Add</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

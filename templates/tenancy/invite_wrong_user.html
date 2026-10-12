@@ -1,0 +1,7 @@
+{% extends "accounts/_simple_card.html" %}
+{% block title %}Different account{% endblock %}
+{% block heading %}This invitation is for someone else{% endblock %}
+{% block inner %}
+<p>The invitation to {{ org.name }} was sent to <b>{{ inv.email }}</b>, but you're signed in as <b>{{ request.user.email }}</b>.</p>
+<form method="post" action="{% url 'accounts:logout' %}">{% csrf_token %}<button class="btn btn--primary btn--block mt-3" type="submit">Sign out and use the invited email</button></form>
+{% endblock %}

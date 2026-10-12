@@ -1,0 +1,13 @@
+{% extends "base_auth.html" %}
+{% block title %}Backup codes{% endblock %}
+{% block card %}
+<div class="card auth-box">
+  <h1>{% if first_time %}Two-factor login is on{% else %}New backup codes{% endif %}</h1>
+  <p class="page-header__sub mb-3">Save these backup codes somewhere safe (print them or keep them in a password manager). Each one works <b>once</b> if you lose your phone. They won't be shown again.{% if not first_time %} Your old codes no longer work.{% endif %}</p>
+  <ul class="backup-codes">{% for c in codes %}<li><code>{{ c }}</code></li>{% endfor %}</ul>
+  <div class="flex gap-2 mt-3">
+    <button type="button" class="btn btn--secondary" onclick="window.print()">{% include "components/icon.html" with name="download" size=16 %} Print</button>
+    <a class="btn btn--primary flex-1" href="{{ next }}">I've saved them, continue</a>
+  </div>
+</div>
+{% endblock %}

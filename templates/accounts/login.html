@@ -1,0 +1,27 @@
+{% extends "base_auth.html" %}
+{% block title %}Sign in{% endblock %}
+{% block card %}
+<div class="card auth-box">
+  <h1>Sign in</h1>
+  <p class="page-header__sub mb-4">Welcome back to {{ PRODUCT_NAME }}.</p>
+  {% if blocked %}<div class="banner banner--danger" role="alert">{% include "components/icon.html" with name="alert" size=18 %} Too many failed attempts. Wait 15 minutes and try again.</div>{% endif %}
+  {% if form.non_field_errors %}<div class="banner banner--danger" role="alert">{% include "components/icon.html" with name="alert" size=18 %} {{ form.non_field_errors.0 }}</div>{% endif %}
+  <form method="post" novalidate class="stack" style="gap: 14px;">
+    {% csrf_token %}
+    <input type="hidden" name="next" value="{{ next }}">
+    {% include "components/field.html" with field=form.email %}
+    {% include "components/field.html" with field=form.password %}
+    <div class="flex items-center justify-between flex-wrap gap-2">
+      {% include "components/field.html" with field=form.remember_me %}
+      <a class="text-sm" href="{% url 'accounts:password_reset' %}">Forgot password?</a>
+    </div>
+    <button type="submit" class="btn btn--primary btn--block">Sign in</button>
+  </form>
+</div>
+<p class="text-center text-sm mt-4">New here? <a href="{% url 'onboarding:signup' %}">Start your free 14-day trial</a></p>
+<div class="mt-4 text-center" x-data>
+  <button type="button" class="btn btn--secondary btn--block" x-show="$store.pwa && $store.pwa.canInstall && !$store.pwa.installed" x-cloak @click="$store.pwa.install()">
+    {% include "components/icon.html" with name="download" size=18 %} Install app
+  </button>
+</div>
+{% endblock %}

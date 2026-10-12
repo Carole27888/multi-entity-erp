@@ -1,0 +1,31 @@
+<header class="topbar">
+  <button type="button" class="icon-btn topbar__menu" aria-label="Open menu" aria-controls="sidebar" :aria-expanded="drawer" @click="drawer = true">
+    {% include "components/icon.html" with name="menu" %}
+  </button>
+  <div class="topbar__title truncate">{% block topbar_title %}{{ page_title }}{% endblock %}</div>
+  <div class="topbar__right">
+    <button type="button" class="btn btn--secondary btn--sm hide-mobile" x-data x-show="$store.pwa && $store.pwa.canInstall && !$store.pwa.installed" x-cloak @click="$store.pwa.install()">
+      {% include "components/icon.html" with name="download" size=16 %} Install app
+    </button>
+    {% include "components/org_switcher.html" %}
+    <div class="dropdown" x-data="{ open: false }" @click.outside="open = false" @keydown.escape="open = false">
+      <button type="button" class="topbar__user" @click="open = !open" :aria-expanded="open" aria-haspopup="menu" aria-label="Account menu">
+        <span class="avatar">{{ request.user.initials }}</span>
+        <span class="topbar__user-text">
+          <span class="topbar__user-name">{{ request.user.get_short_name }}</span>
+          <span class="topbar__user-role">{% if membership %}{{ membership.role.name }}{% else %}Account{% endif %}</span>
+        </span>
+      </button>
+      <div class="dropdown__menu" role="menu" x-show="open" x-cloak x-transition>
+        <div class="text-sm text-muted truncate" style="padding: 8px 12px;">{{ request.user.email }}</div>
+        <div class="dropdown__divider"></div>
+        <a class="dropdown__item" role="menuitem" href="{% gurl 'accounts:security' %}">{% include "components/icon.html" with name="shield" size=18 %} Security</a>
+        {% if request.user.is_platform_staff and not impersonator %}<a class="dropdown__item" role="menuitem" href="{% gurl 'platformadmin:dashboard' %}">{% include "components/icon.html" with name="activity" size=18 %} Platform admin</a>{% endif %}
+        <div class="dropdown__divider"></div>
+        <form method="post" action="{% gurl 'accounts:logout' %}">{% csrf_token %}
+          <button type="submit" class="dropdown__item" role="menuitem">{% include "components/icon.html" with name="logout" size=18 %} Sign out</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</header>

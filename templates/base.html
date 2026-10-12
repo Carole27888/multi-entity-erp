@@ -1,0 +1,47 @@
+{% load static %}<!doctype html>
+<html lang="en-GB" style="{{ brand_css }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="csrf-token" content="{{ csrf_token }}">
+  <meta name="description" content="{{ PRODUCT_NAME }}">
+  <title>{% block title %}{{ page_title|default:PRODUCT_NAME }}{% endblock %}{% if org %} · {{ org.name }}{% endif %} · {{ PRODUCT_NAME }}</title>
+  {% pwa_head %}
+  <link rel="preload" href="{% static 'fonts/manrope/manrope-latin-400-normal.woff2' %}" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="{% static 'fonts/manrope/manrope-latin-800-normal.woff2' %}" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="{% static 'css/tokens.css' %}">
+  <link rel="stylesheet" href="{% static 'css/base.css' %}">
+  <link rel="stylesheet" href="{% static 'css/layout.css' %}">
+  <link rel="stylesheet" href="{% static 'css/components.css' %}">
+  <link rel="stylesheet" href="{% static 'css/utilities.css' %}">
+  <link rel="stylesheet" href="{% static 'css/platform.css' %}">
+  {% block extra_head %}{% endblock %}
+  <script src="{% static 'vendor/htmx/htmx.min.js' %}" defer></script>
+  <script src="{% static 'js/app.js' %}" defer></script>
+  {% block chart_js %}{% endblock %}
+  <script src="{% static 'vendor/alpine/alpine.min.js' %}" defer></script>
+</head>
+<body class="{% block body_class %}{% if bottom_nav %}has-bottom-nav{% endif %}{% endblock %}" hx-headers='{"X-Requested-With": "XMLHttpRequest"}'>
+{% block body %}
+  <a class="skip-link" href="#main">Skip to content</a>
+  {% include "components/impersonation_banner.html" %}
+  <div class="app" x-data="{ drawer: false }" @keydown.escape.window="drawer = false">
+    {% include "components/sidebar.html" %}
+    <div class="backdrop" x-show="drawer" x-cloak x-transition.opacity @click="drawer = false"></div>
+    <div class="main">
+      {% include "components/topbar.html" %}
+      {% include "components/org_banners.html" %}
+      <main id="main" class="content" tabindex="-1">
+        {% block content %}{% endblock %}
+      </main>
+    </div>
+    {% include "components/bottom_nav.html" %}{# inside .app so the Menu button can open the drawer #}
+  </div>
+  {% include "components/ios_banner.html" %}
+{% endblock %}
+  <div id="toasts" class="toasts" aria-live="polite"></div>
+  <div id="modal-root"></div>
+  {% for message in messages %}<div hidden data-django-message data-level="{{ message.tags }}">{{ message }}</div>{% endfor %}
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-header">
+  <div><h1>Roles & permissions</h1><p class="page-header__sub">Built-in roles cover most teams. Duplicate one to make your own.</p></div>
+  <div class="page-header__actions"><a class="btn btn--primary" href="{% url 'orgsettings:role_new' %}">{% include "components/icon.html" with name="plus" size=18 %} New role</a></div>
+</div>
+<div class="card card--flush">
+  <div class="table-wrap">
+    <table class="table table--stack">
+      <thead><tr><th>Role</th><th>Records</th><th>Two-factor</th><th>People</th><th><span class="visually-hidden">Actions</span></th></tr></thead>
+      <tbody>
+        {% for r in roles %}
+          <tr>
+            <td data-label="Role"><div class="table__primary">{{ r.name }}{% if r.is_builtin %} <span class="pill pill--neutral">Built-in</span>{% endif %}</div><div class="table__sub">{{ r.description }}</div></td>
+            <td data-label="Records">{{ r.get_default_scope_display }}</td>
+            <td data-label="Two-factor">{% if r.two_factor_required %}<span class="pill pill--info">Required</span>{% else %}Optional{% endif %}</td>
+            <td data-label="People">{{ r.members }}</td>
+            <td class="text-right nowrap" data-label="">
+              {% if r.is_builtin %}<a class="btn btn--sm btn--ghost" href="{% url 'orgsettings:role_view' r.pk %}">View</a>{% else %}<a class="btn btn--sm btn--secondary" href="{% url 'orgsettings:role_edit' r.pk %}">Edit</a>{% endif %}
+              <a class="btn btn--sm btn--ghost" href="{% url 'orgsettings:role_new' %}?from={{ r.pk }}">Duplicate</a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

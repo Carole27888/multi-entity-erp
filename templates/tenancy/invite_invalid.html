@@ -1,0 +1,7 @@
+{% extends "accounts/_simple_card.html" %}
+{% block title %}Invitation not valid{% endblock %}
+{% block heading %}This invitation isn't valid{% endblock %}
+{% block inner %}
+<p>It may have expired (invitations last 7 days), been cancelled or already used. Ask the person who invited you to send a new one.</p>
+<a class="btn btn--secondary btn--block mt-3" href="{% url 'accounts:login' %}">Go to sign in</a>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% load static %}<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Offline · {{ PRODUCT_NAME }}</title>
+  <link rel="stylesheet" href="{% static 'css/tokens.css' %}">
+  <link rel="stylesheet" href="{% static 'css/base.css' %}">
+  <link rel="stylesheet" href="{% static 'css/components.css' %}">
+</head>
+<body>
+  <main class="standalone-page">
+    <div>
+      {% include "components/icon.html" with name="wifi-off" class="brand__mark" size=64 stroke="1.6" %}
+      <p class="fw-800" style="letter-spacing: .08em; color: var(--c-white);">{{ PRODUCT_NAME }}</p>
+      <h1>You are offline.</h1>
+      <p class="mt-2">Check your connection and try again. Your data is never stored on this device.</p>
+      <button type="button" class="btn btn--primary mt-4" onclick="window.location.reload()">Retry</button>
+    </div>
+  </main>
+</body>
+</html>

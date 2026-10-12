@@ -1,0 +1,15 @@
+{% extends "onboarding/_wizard.html" %}
+{% block step_title %}How big is your team?{% endblock %}
+{% block step_sub %}It helps us suggest roles and the right plan. Your trial includes up to 10 users.{% endblock %}
+{% block step %}
+{% for e in form.team_size.errors %}<div class="banner banner--danger" role="alert">Choose one to continue.</div>{% endfor %}
+<div class="option-grid" role="radiogroup" aria-label="Team size">
+  {% for value, label in form.fields.team_size.choices %}
+    <label class="option-card">
+      <input type="radio" name="team_size" value="{{ value }}"{% if form.team_size.value == value %} checked{% endif %} required>
+      <span class="option-card__icon">{% include "components/icon.html" with name="users" size=22 %}</span>
+      <span class="option-card__title">{{ label }}</span>
+    </label>
+  {% endfor %}
+</div>
+{% endblock %}

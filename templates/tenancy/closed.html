@@ -1,0 +1,7 @@
+{% extends "accounts/_simple_card.html" %}
+{% block title %}Account unavailable{% endblock %}
+{% block heading %}{{ org.name }} is unavailable{% endblock %}
+{% block inner %}
+<p>{% if org.status == "suspended" %}This organization's account has been suspended.{% else %}This organization's account has been closed.{% endif %} Your data is kept safe. Contact <a href="mailto:{{ SUPPORT_EMAIL }}">{{ SUPPORT_EMAIL }}</a> for help.</p>
+<a class="btn btn--secondary btn--block mt-3" href="{% gurl 'tenancy:choose' %}?all=1">Your other organizations</a>
+{% endblock %}

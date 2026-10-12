@@ -1,0 +1,17 @@
+{# with label value icon delta delta_tone(good|bad|neutral) delta_dir(up|down) dark tag foot #}
+{% if dark %}
+<div class="card kpi kpi--dark">
+  <div class="flex items-start justify-between gap-2"><span class="kpi__label">{{ label }}</span>{% if tag %}<span class="kpi__tag">{{ tag }}</span>{% endif %}</div>
+  <div class="kpi__value">{{ value }}</div>
+  {% if foot %}<div class="kpi__foot">{{ foot }}</div>{% endif %}
+</div>
+{% else %}
+<div class="card kpi">
+  {% if icon %}<span class="kpi__icon">{% include "components/icon.html" with name=icon size=22 %}</span>{% endif %}
+  <div class="flex-1">
+    <div class="kpi__label">{{ label }}</div>
+    <div class="kpi__value{% if text_value %} kpi__value--text{% endif %}">{{ value }}</div>
+    {% if delta %}<div class="kpi__delta kpi__delta--{{ delta_tone|default:'neutral' }}">{% if delta_dir == "up" %}{% include "components/icon.html" with name="arrow-up" size=13 stroke="2.4" %}{% elif delta_dir == "down" %}{% include "components/icon.html" with name="arrow-down" size=13 stroke="2.4" %}{% endif %}{{ delta }}</div>{% endif %}
+  </div>
+</div>
+{% endif %}

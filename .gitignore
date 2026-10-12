@@ -1,0 +1,33 @@
+.env
+.venv/
+venv/
+__pycache__/
+*.pyc
+/staticfiles/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Databases
+db.sqlite3
+db.sqlite3-journal
+*.sqlite3
+*.sqlite3-journal
+*.db
+
+# Uploaded files, logs, backups and Passenger restart marker stay on the server
+/media/*
+!/media/.gitkeep
+/logs/*
+!/logs/.gitkeep
+/backups/
+/tmp/*
+!/tmp/.gitkeep
+
+# Migrations are generated on each machine (python manage.py makemigrations); keep only the package marker.
+# Reference data lives in each app's setup.py (post_migrate), never in a data migration.
+apps/*/migrations/*
+!apps/*/migrations/__init__.py
+
+# Headless-browser screenshots from the visual check
+/screenshots/

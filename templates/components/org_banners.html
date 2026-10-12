@@ -1,0 +1,12 @@
+{% if org and membership %}
+  {% if org.status == "read_only" %}
+    <div class="banner banner--danger shell-banner" role="alert">{% include "components/icon.html" with name="lock" size=18 %}
+      <span><strong>Read-only.</strong> Your subscription is unpaid, so changes are paused. Your data is safe and nothing is deleted.</span></div>
+  {% elif org.status == "past_due" %}
+    <div class="banner banner--warning shell-banner" role="status">{% include "components/icon.html" with name="clock" size=18 %}
+      <span>Your payment is overdue. Pay soon to avoid read-only mode.</span></div>
+  {% elif org.status == "trial" and org.trial_days_left is not None %}
+    <div class="banner banner--info shell-banner" role="status">{% include "components/icon.html" with name="zap" size=18 %}
+      <span>{% if org.trial_days_left > 0 %}Free trial: <strong>{{ org.trial_days_left }} day{{ org.trial_days_left|pluralize }}</strong> left, with all {{ org.effective_plan.name }} features.{% else %}Your free trial has ended.{% endif %}</span></div>
+  {% endif %}
+{% endif %}

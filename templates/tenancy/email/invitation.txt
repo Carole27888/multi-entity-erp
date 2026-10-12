@@ -1,0 +1,10 @@
+Hello,
+
+{% if inviter %}{{ inviter.full_name }} has invited you{% else %}You have been invited{% endif %} to join {{ org.name }} on {{ PRODUCT_NAME }} as {{ inv.role.name }}.
+
+Accept the invitation (it works for 7 days):
+{{ url }}
+
+If you weren't expecting this, you can ignore this email.
+
+{{ PRODUCT_NAME }}

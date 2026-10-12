@@ -1,0 +1,32 @@
+{# Permission matrix: module × action, each module's extra permissions (e.g. confidential fields) and record scope. #}
+<div class="matrix-wrap">
+  <table class="matrix">
+    <thead><tr><th>Module</th>{% for a in matrix.actions %}<th>{{ a }}</th>{% endfor %}<th>Records</th></tr></thead>
+    <tbody>
+      {% for row in matrix.rows %}
+        <tr>
+          <td class="fw-700">{{ row.module.name }}</td>
+          {% for c in row.cells %}
+            {% if c.available %}
+              <td data-label="{{ c.action }}"><input type="checkbox" name="perm" value="{{ c.key }}" aria-label="{{ row.module.name }}: {{ c.action }}"{% if c.on %} checked{% endif %}{% if not matrix.editable %} disabled{% endif %}></td>
+            {% else %}<td class="na" aria-hidden="true">–</td>{% endif %}
+          {% endfor %}
+          <td data-label="Records">
+            {% if matrix.editable %}
+              <select name="scope_{{ row.module.key }}" aria-label="{{ row.module.name }}: records">
+                {% for value, label in matrix.scopes %}<option value="{{ value }}"{% if row.scope == value %} selected{% endif %}>{{ label }}</option>{% endfor %}
+              </select>
+            {% else %}{% for value, label in matrix.scopes %}{% if row.scope == value %}{{ label }}{% endif %}{% endfor %}{% endif %}
+          </td>
+        </tr>
+        {% if row.extras %}
+          <tr><td colspan="{{ matrix.actions|length|add:2 }}" class="matrix__extras">
+            <span class="text-xs text-muted fw-700" style="margin-right: 12px;">ALSO</span>
+            {% for x in row.extras %}<label><input type="checkbox" name="perm" value="{{ x.key }}"{% if x.on %} checked{% endif %}{% if not matrix.editable %} disabled{% endif %}> {{ x.label }}</label>{% endfor %}
+          </td></tr>
+        {% endif %}
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<p class="text-sm text-muted mt-2">New modules appear here automatically as they are switched on.</p>

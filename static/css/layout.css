@@ -1,0 +1,183 @@
+/* App shell: sidebar, top bar, content, grids, drawer, phone bottom navigation. */
+
+.app {
+  display: grid;
+  grid-template-columns: var(--sidebar-w) minmax(0, 1fr);
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/* ---------- Sidebar ---------- */
+.sidebar {
+  position: sticky; top: 0;
+  height: 100vh; height: 100dvh;
+  display: flex; flex-direction: column;
+  background: var(--c-sidebar);
+  color: var(--c-sidebar-text);
+  padding: calc(var(--sp-5) + env(safe-area-inset-top)) var(--sp-3) calc(var(--sp-4) + env(safe-area-inset-bottom)) calc(var(--sp-3) + env(safe-area-inset-left));
+  overflow-y: auto;
+  z-index: 40;
+}
+.brand { display: flex; align-items: center; gap: var(--sp-3); padding: 0 var(--sp-2) var(--sp-5); color: var(--c-white); }
+.brand:hover { text-decoration: none; }
+.brand__mark { width: 40px; height: 40px; color: var(--c-white); }
+.brand__name { display: block; font-size: 19px; font-weight: 800; letter-spacing: 0.02em; line-height: 1.1; }
+.brand__tag { display: block; font-size: 8.5px; font-weight: 600; letter-spacing: 0.08em; white-space: nowrap; color: var(--c-sidebar-text); margin-top: 3px; }
+
+.sidebar__back {
+  display: flex; align-items: center; gap: var(--sp-2);
+  min-height: var(--tap); padding: 0 var(--sp-3); margin-bottom: var(--sp-2);
+  color: var(--c-sidebar-text); font-weight: 500; border-radius: var(--radius);
+}
+.sidebar__back:hover { background: var(--c-sidebar-hover); text-decoration: none; color: var(--c-white); }
+.sidebar__section {
+  font-size: var(--fs-xs); font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--c-sidebar-muted); padding: var(--sp-3) var(--sp-3) var(--sp-2);
+}
+.sidebar nav { margin-bottom: var(--sp-6); }
+.nav { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+.nav__link {
+  display: flex; align-items: center; gap: var(--sp-3);
+  min-height: var(--tap); padding: 0 var(--sp-3);
+  color: var(--c-sidebar-text); font-weight: 500; font-size: var(--fs-md);
+  border-radius: var(--radius);
+  transition: background 0.15s, color 0.15s;
+}
+.nav__link:hover { background: var(--c-sidebar-hover); color: var(--c-white); text-decoration: none; }
+.nav__link.is-active { background: var(--c-primary-hover); color: var(--c-white); font-weight: 700; }
+.nav__link .icon { opacity: 0.9; }
+.nav__badge {
+  margin-left: auto; min-width: 22px; height: 22px; padding: 0 7px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--c-badge); color: var(--c-white); font-size: var(--fs-xs); font-weight: 700; border-radius: var(--radius-pill);
+}
+/* Collapsible sidebar group (e.g. "Leave") — a <details> styled to look like any other nav row. */
+.nav__group summary.nav__link { cursor: pointer; list-style: none; }
+.nav__group summary.nav__link::-webkit-details-marker { display: none; }
+.nav__chevron { margin-left: auto; opacity: 0.7; transition: transform 0.15s; }
+.nav__group[open] summary .nav__chevron { transform: rotate(180deg); }
+.nav__group .nav__badge { margin-left: 0; }
+.nav--sub { margin: 2px 0 0 calc(var(--sp-3) + 20px + var(--sp-3)); padding-left: var(--sp-3); border-left: 1px solid var(--c-sidebar-hover); }
+.sidebar__user {
+  margin-top: auto; flex-shrink: 0; display: flex; align-items: center; gap: var(--sp-3);
+  padding: var(--sp-3); border-radius: var(--radius-lg); background: var(--c-sidebar-card); color: var(--c-white);
+}
+.sidebar__user .avatar { background: var(--c-white); color: var(--c-primary); }
+.sidebar__user-role { font-size: var(--fs-xs); color: var(--c-sidebar-text); }
+
+/* ---------- Main column ---------- */
+.main { display: flex; flex-direction: column; min-width: 0; }
+.topbar {
+  position: sticky; top: 0; z-index: 30;
+  display: flex; align-items: center; gap: var(--sp-4);
+  min-height: calc(var(--topbar-h) + env(safe-area-inset-top));
+  padding: env(safe-area-inset-top) calc(var(--sp-7) + env(safe-area-inset-right)) 0 var(--sp-7);
+  background: var(--c-card); border-bottom: 1px solid var(--c-border);
+}
+.icon-btn.topbar__menu { display: none; }
+.topbar__search { flex: 1 1 auto; max-width: 480px; position: relative; }
+.topbar__search .icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--c-text-muted); pointer-events: none; }
+.topbar__search input {
+  width: 100%; height: 42px; padding: 0 var(--sp-4) 0 42px;
+  background: var(--c-page-bg); border: 1px solid var(--c-border); border-radius: var(--radius);
+}
+.topbar__search input:focus { outline: none; border-color: var(--c-primary-hover); box-shadow: var(--focus-ring); background: var(--c-card); }
+@media (max-width: 720px) { .topbar__search input { font-size: 16px; } }
+.topbar__right { margin-left: auto; display: flex; align-items: center; gap: var(--sp-3); }
+.topbar__user { display: flex; align-items: center; gap: var(--sp-3); padding: 4px; border-radius: var(--radius); background: none; border: 0; text-align: left; min-height: var(--tap); }
+.topbar__user:hover { background: var(--c-page-bg); }
+.topbar__user-text { display: flex; flex-direction: column; }
+.topbar__user-name { font-weight: 700; font-size: var(--fs-md); line-height: 1.2; }
+.topbar__user-role { font-size: var(--fs-sm); color: var(--c-text-muted); }
+
+.content {
+  flex: 1;
+  padding: var(--sp-6) calc(var(--sp-7) + env(safe-area-inset-right)) calc(var(--sp-8) + env(safe-area-inset-bottom)) var(--sp-7);
+  width: 100%;
+  max-width: 1680px;
+}
+
+/* ---------- Page header ---------- */
+.page-header { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--sp-4); margin-bottom: var(--sp-6); flex-wrap: wrap; }
+.page-header__sub { margin: 6px 0 0; font-size: 13px; color: var(--c-text-muted); }
+.page-header__actions { display: flex; gap: var(--sp-3); flex-wrap: wrap; align-items: center; }
+
+/* ---------- Grids ---------- */
+.grid-2 { display: grid; gap: var(--gap); grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.grid-3 { display: grid; gap: var(--gap); grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.grid-4 { display: grid; gap: var(--gap); grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.grid-main-side { display: grid; gap: var(--gap); grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); }
+.grid-auto { display: grid; gap: var(--gap); grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+/* The side column of a .grid-main-side: a vertical divider only makes sense once there's a column
+   next to it to divide from — under 1280px the grid collapses to one column (see below), so the
+   border needs to go with it or it's just a stray line above a full-width block. */
+.side-panel--bordered { padding-left: 20px; border-left: 1px solid var(--c-border); }
+@media (max-width: 1280px) { .side-panel--bordered { padding-left: 0; border-left: 0; } }
+.stack { display: flex; flex-direction: column; gap: var(--gap); }
+.section { margin-bottom: var(--gap); }
+/* Marker class for any "row" grid that sets a fixed, non-auto-fit grid-template-columns inline for its
+   desktop layout (a label+bar+value row, a multi-field form row, etc.) — auto-fit/auto-fill grids
+   already reflow on their own and don't need this. Add the class alongside the inline style; the
+   media query below (with the whole app's one other narrow breakpoint, 720px) stacks it to one
+   column instead of letting several fixed-width columns overflow the card on a phone. */
+
+/* ---------- Drawer backdrop & bottom nav ---------- */
+.backdrop { position: fixed; inset: 0; background: var(--c-overlay); z-index: 35; }
+.bottom-nav { display: none; }
+
+@media (max-width: 1280px) {
+  .grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  /* !important: several pages set their own grid-template-columns inline (e.g. "minmax(0, 3fr)
+     minmax(260px, 1fr)") to size the two columns at desktop width — an inline style otherwise beats
+     this media query outright and the page never collapses to one column on a phone. This is the one
+     rule that must always win under 1280px regardless of what any page requests above it. */
+  .grid-main-side { grid-template-columns: minmax(0, 1fr) !important; }
+}
+
+@media (max-width: 1024px) {
+  .app { grid-template-columns: minmax(0, 1fr); }
+  .sidebar {
+    position: fixed; left: 0; top: 0; bottom: 0; width: min(86vw, var(--sidebar-w));
+    transform: translateX(-100%); transition: transform 0.22s ease; box-shadow: var(--shadow-lg);
+  }
+  .sidebar.is-open { transform: translateX(0); }
+  .topbar { padding-left: calc(var(--sp-4) + env(safe-area-inset-left)); padding-right: calc(var(--sp-4) + env(safe-area-inset-right)); }
+  .icon-btn.topbar__menu { display: inline-flex; }
+  .content { padding-left: calc(var(--sp-5) + env(safe-area-inset-left)); padding-right: calc(var(--sp-5) + env(safe-area-inset-right)); }
+  .grid-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 720px) {
+  .topbar { gap: var(--sp-2); }
+  .topbar__user-text { display: none; }
+  .content {
+    padding: var(--sp-4) calc(var(--sp-4) + env(safe-area-inset-right)) calc(var(--bottomnav-h) + var(--sp-6) + env(safe-area-inset-bottom)) calc(var(--sp-4) + env(safe-area-inset-left));
+  }
+  .page-header { margin-bottom: var(--sp-4); }
+  .page-header__actions { width: 100%; }
+  .page-header__actions > * { flex: 1 1 auto; }
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: minmax(0, 1fr); }
+  .grid-4.kpis-2up { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .grid--fixed-cols { grid-template-columns: minmax(0, 1fr) !important; row-gap: 6px; }
+  .kpis-2up .kpi { flex-direction: column; gap: var(--sp-2); padding: var(--sp-4); }
+  /* --fs-kpi's clamp() floors at 20px well before a card this narrow can fit a big KES figure
+     ("KES 77,855,008") at that size — it was overflowing the card and getting clipped by its rounded
+     corners. Shrink it further here, and let it wrap onto a second line as a fallback for anything
+     still too wide, instead of ever silently hiding digits. */
+  .kpis-2up .kpi__value { font-size: 19px; white-space: normal; word-break: break-word; }
+
+  .bottom-nav {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 30;
+    display: grid; grid-auto-flow: column; grid-auto-columns: 1fr;
+    min-height: calc(var(--bottomnav-h) + env(safe-area-inset-bottom));
+    padding: 0 env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+    background: var(--c-card); border-top: 1px solid var(--c-border); box-shadow: 0 -4px 16px rgba(16, 40, 30, 0.06);
+  }
+  .bottom-nav__item {
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+    min-height: var(--bottomnav-h); color: var(--c-text-muted); font-size: 11px; font-weight: 600;
+  }
+  .bottom-nav__item:hover { text-decoration: none; }
+  .bottom-nav__item.is-active { color: var(--c-primary); }
+  .bottom-nav__item.is-active .icon { stroke-width: 2.3; }
+}

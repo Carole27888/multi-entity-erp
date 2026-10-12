@@ -1,0 +1,9 @@
+{% if impersonator %}
+<div class="impersonation-bar" role="alert">
+  {% include "components/icon.html" with name="alert" size=18 %}
+  <span class="flex-1">You are viewing as <strong>{{ request.user.full_name }}</strong> ({{ request.user.email }}). Signed in as {{ impersonator.full_name }}, platform staff. Every action is logged.</span>
+  <form method="post" action="{% gurl 'platformadmin:stop_impersonating' %}">{% csrf_token %}
+    <button type="submit" class="btn btn--sm impersonation-bar__btn">Stop</button>
+  </form>
+</div>
+{% endif %}

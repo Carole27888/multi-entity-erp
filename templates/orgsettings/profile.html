@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block content %}
+{% include "components/page_header.html" with title="Profile & branding" subtitle="Shown on your documents, website, emails and customer portal." %}
+<form method="post" enctype="multipart/form-data" novalidate>{% csrf_token %}
+<fieldset {% if not can_edit %}disabled{% endif %} style="border: 0; padding: 0; margin: 0; min-width: 0;">
+<div class="grid-main-side">
+  <div class="card">
+    <div class="card__header"><h2 class="card__title">Organization</h2></div>
+    <div class="form-grid">
+      {% include "components/field.html" with field=form.name %}
+      {% include "components/field.html" with field=form.legal_name %}
+      {% include "components/field.html" with field=form.email %}
+      {% include "components/field.html" with field=form.phone %}
+      {% include "components/field.html" with field=form.address span=True %}
+      {% include "components/field.html" with field=form.kra_pin %}
+      {% include "components/field.html" with field=form.website_url %}
+      {% include "components/field.html" with field=form.country %}
+      {% include "components/field.html" with field=form.currency %}
+      {% include "components/field.html" with field=form.timezone span=True %}
+    </div>
+  </div>
+  <div class="card">
+    <div class="card__header"><h2 class="card__title">Branding</h2></div>
+    <div class="stack">
+      <div class="flex items-center gap-3">
+        {% if org.logo %}<img src="{% gurl 'core:org_logo' org.slug %}?v={{ org.updated_at|date:'U' }}" alt="Current logo" width="64" height="64" style="object-fit: contain; border: 1px solid var(--c-border); border-radius: var(--radius); padding: 4px;">
+        {% else %}<span class="brand__initials" style="background: var(--c-primary); color: var(--c-white); width: 64px; height: 64px; font-size: 20px;">{{ org.initials }}</span>{% endif %}
+        <div class="text-sm text-muted">Square logos look best. Without one, your initials are used.</div>
+      </div>
+      {% include "components/field.html" with field=form.logo %}
+      {% if org.logo %}{% include "components/field.html" with field=form.remove_logo %}{% endif %}
+      <div class="field" x-data="{ c: '{{ form.brand_colour.value|default:'#134E4A' }}' }">
+        <label for="{{ form.brand_colour.id_for_label }}">Brand colour</label>
+        <div class="colour-row">
+          <input type="color" name="{{ form.brand_colour.html_name }}" id="{{ form.brand_colour.id_for_label }}" x-model="c" value="{{ form.brand_colour.value }}">
+          <code x-text="c.toUpperCase()"></code>
+        </div>
+        {% for e in form.brand_colour.errors %}<span class="field__error">{{ e }}</span>{% endfor %}
+        <span class="field__help">Menus and buttons use a shade of this colour that keeps text readable.</span>
+      </div>
+    </div>
+  </div>
+</div>
+</fieldset>
+{% if can_edit %}<div class="mt-4"><button type="submit" class="btn btn--primary">Save changes</button></div>{% else %}<p class="text-sm text-muted mt-4">You can view these settings. Ask an admin to change them.</p>{% endif %}
+</form>
+{% endblock %}

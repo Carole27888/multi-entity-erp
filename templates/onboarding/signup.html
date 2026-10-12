@@ -1,0 +1,23 @@
+{% extends "base_auth.html" %}
+{% block title %}Create your account{% endblock %}
+{% block hero %}
+<h2>Set up your business in minutes.</h2>
+<p class="mt-3">Pick your industry and {{ PRODUCT_NAME }} configures itself: the right modules, words, pipeline stages and documents. Free for 14 days, no card needed.</p>
+{% endblock %}
+{% block card %}
+<div class="card auth-box">
+  <h1>Start your free trial</h1>
+  <p class="page-header__sub mb-4">14 days with every Growth feature. No card needed.</p>
+  {% if form.non_field_errors %}<div class="banner banner--danger" role="alert">{% include "components/icon.html" with name="alert" size=18 %} {{ form.non_field_errors.0 }}</div>{% endif %}
+  <form method="post" novalidate class="stack" style="gap: 14px;">{% csrf_token %}
+    {% include "components/field.html" with field=form.full_name %}
+    {% include "components/field.html" with field=form.email %}
+    {% include "components/field.html" with field=form.phone %}
+    {% include "components/field.html" with field=form.password %}
+    <div class="hp-field" aria-hidden="true"><label for="{{ form.company_website.id_for_label }}">Leave this empty</label>{{ form.company_website }}</div>
+    {% include "components/field.html" with field=form.accept_terms %}
+    <button type="submit" class="btn btn--primary btn--block">Create account</button>
+  </form>
+</div>
+<p class="text-center text-sm mt-4">Already have an account? <a href="{% url 'accounts:login' %}">Sign in</a></p>
+{% endblock %}

@@ -1,0 +1,10 @@
+{# with form (a django-filter form) target (hx-target selector) #}
+<form class="filter-bar" method="get" hx-get="{{ request.path }}" hx-target="{{ target|default:'#results' }}" hx-trigger="change, submit" hx-swap="outerHTML" hx-push-url="true" hx-select="{{ target|default:'#results' }}">
+  {% for field in form %}
+    <div class="field">
+      <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+      {{ field }}
+    </div>
+  {% endfor %}
+  <button type="submit" class="btn btn--secondary">{% include "components/icon.html" with name="filter" size=16 %} Filter</button>
+</form>

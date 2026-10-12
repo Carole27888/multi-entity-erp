@@ -1,0 +1,8 @@
+{# {% include "components/page_header.html" with title="…" subtitle="…" %} — actions go in a {% block %} of the page, or pass actions_template #}
+<div class="page-header">
+  <div>
+    <h1>{{ title }}</h1>
+    {% if subtitle %}<p class="page-header__sub">{{ subtitle }}</p>{% endif %}
+  </div>
+  {% if actions_template %}<div class="page-header__actions">{% include actions_template %}</div>{% endif %}
+</div>

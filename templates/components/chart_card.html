@@ -1,0 +1,11 @@
+{# with title chart_id chart_type data(dict with labels/datasets) subtitle legend(list of {label,color}) small #}
+<div class="card">
+  <div class="card__header">
+    <div><h2 class="card__title">{{ title }}</h2>{% if subtitle %}<div class="card__sub">{{ subtitle }}</div>{% endif %}</div>
+    {% if legend %}<div class="legend">{% for item in legend %}<span><span class="legend__swatch" style="background: var({{ item.color }})"></span>{{ item.label }}</span>{% endfor %}</div>{% endif %}
+  </div>
+  <div class="chart-box{% if small %} chart-box--sm{% endif %}">
+    <canvas data-chart="{{ chart_type|default:'bar' }}" data-source="{{ chart_id }}" role="img" aria-label="{{ title }} chart"></canvas>
+  </div>
+  {{ data|json_script:chart_id }}
+</div>

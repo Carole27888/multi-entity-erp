@@ -1,0 +1,5 @@
+<div class="empty">
+  {% include "components/icon.html" with name=icon|default:"inbox" size=36 %}
+  <div class="empty__title">{{ title|default:"Nothing here yet" }}</div>
+  {% if message %}<div class="text-sm">{{ message }}</div>{% endif %}
+</div>

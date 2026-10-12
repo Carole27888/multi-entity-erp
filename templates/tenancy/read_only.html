@@ -1,0 +1,8 @@
+{% extends "accounts/_simple_card.html" %}
+{% block title %}Read-only{% endblock %}
+{% block heading %}Changes are paused{% endblock %}
+{% block inner %}
+<p>{{ org.name }}'s subscription is unpaid, so the account is read-only. You can still view and export everything; nothing has been deleted.</p>
+<p class="text-sm text-muted">An owner can renew the subscription to unlock changes.</p>
+<a class="btn btn--secondary btn--block mt-3" href="{% org_url org %}">Back to the dashboard</a>
+{% endblock %}

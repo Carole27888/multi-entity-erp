@@ -1,0 +1,17 @@
+{% extends "onboarding/_wizard.html" %}
+{% block step_title %}Invite your team{% endblock %}
+{% block step_sub %}Each person gets an email to join. Roles decide what they can see. You can skip this and invite people later.{% endblock %}
+{% block next_label %}Finish set-up{% endblock %}
+{% block step %}
+{{ formset.management_form }}
+{% if formset.non_form_errors %}<div class="banner banner--danger" role="alert">{{ formset.non_form_errors.0 }}</div>{% endif %}
+<div class="card stack">
+  {% for f in formset %}
+    <div class="grid-2 grid--fixed-cols" style="grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);">
+      {% include "components/field.html" with field=f.email %}
+      {% include "components/field.html" with field=f.role %}
+    </div>
+  {% endfor %}
+</div>
+<p class="text-sm text-muted mt-3">Owner, Admin and Finance roles must use two-factor login.</p>
+{% endblock %}

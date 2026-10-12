@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content %}
+{% include "components/page_header.html" with title="Team" subtitle="People who can sign in to this organization." %}
+<div class="grid-main-side" style="align-items: start;">
+  <div class="card card--flush">
+    <div class="card__header" style="padding: 16px 20px 0;"><h2 class="card__title">Members</h2><span class="text-sm text-muted">{{ seats }}{% if seat_limit %} of {{ seat_limit }}{% endif %} seats used</span></div>
+    <div class="table-wrap">
+      <table class="table table--stack">
+        <thead><tr><th>Name</th><th>Role</th><th>Status</th><th class="hide-mobile">Last seen</th><th><span class="visually-hidden">Actions</span></th></tr></thead>
+        <tbody>
+          {% for m in team %}
+            <tr>
+              <td data-label="Name"><div class="table__primary">{{ m.user.full_name }}</div><div class="table__sub">{{ m.user.email }}{% if m.title %} · {{ m.title }}{% endif %}</div></td>
+              <td data-label="Role">{{ m.role.name }}{% for d in m.departments.all %}<div class="table__sub">{{ d.name }}</div>{% endfor %}</td>
+              <td data-label="Status">{% if m.status == "active" %}<span class="pill pill--success">Active</span>{% else %}<span class="pill pill--neutral">Disabled</span>{% endif %}
+                {% if m.user.totp_enabled %}<span class="pill pill--info" title="Two-factor login on">2FA</span>{% endif %}</td>
+              <td data-label="Last seen" class="hide-mobile text-sm text-muted">{% if m.last_seen_at %}{{ m.last_seen_at|ago }} ago{% else %}Never{% endif %}</td>
+              <td class="text-right" data-label=""><a class="btn btn--sm btn--secondary" href="{% url 'orgsettings:member_edit' m.pk %}">Edit</a></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% if invitations %}
+      <div style="padding: 16px 20px;">
+        <h3 class="mb-2">Waiting to join</h3>
+        <ul class="list">
+          {% for inv in invitations %}
+            <li class="list__item">
+              <div class="list__main"><div class="list__title">{{ inv.email }}</div><div class="list__sub">{{ inv.role.name }} · {% if inv.is_open %}expires {{ inv.expires_at|date:"j M" }}{% else %}expired{% endif %}</div></div>
+              <div class="flex gap-2">
+                <form method="post" action="{% url 'orgsettings:invitation_resend' inv.pk %}">{% csrf_token %}<button class="btn btn--sm btn--ghost" type="submit">Resend</button></form>
+                <form method="post" action="{% url 'orgsettings:invitation_revoke' inv.pk %}">{% csrf_token %}<button class="btn btn--sm btn--ghost" type="submit">Cancel</button></form>
+              </div>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+  </div>
+  <div class="card">
+    <div class="card__header"><h2 class="card__title">Invite someone</h2></div>
+    {% if form.non_field_errors %}<div class="banner banner--warning" role="alert">{{ form.non_field_errors.0 }}</div>{% endif %}
+    <form method="post" novalidate class="stack">{% csrf_token %}
+      {% include "components/field.html" with field=form.email %}
+      {% include "components/field.html" with field=form.role %}
+      <button type="submit" class="btn btn--primary">{% include "components/icon.html" with name="send" size=16 %} Send invitation</button>
+    </form>
+    <p class="text-sm text-muted mt-3">Owner, Admin and Finance roles must use two-factor login. See <a href="{% url 'orgsettings:roles' %}">Roles & permissions</a>.</p>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,14 @@
+{# {% include "components/brand.html" with home="/" org=org dark=False %} — the organization's logo/name inside it, else the product. #}
+<a class="brand{% if dark %} brand--dark{% endif %}" href="{{ home|default:'/' }}" aria-label="{% if org %}{{ org.name }}{% else %}{{ PRODUCT_NAME }}{% endif %} home">
+  {% if org and org.logo %}
+    <img class="brand__logo" src="{% gurl 'core:org_logo' org.slug %}?v={{ org.updated_at|date:'U' }}" alt="" width="40" height="40">
+  {% elif org %}
+    <span class="brand__initials" aria-hidden="true">{{ org.initials }}</span>
+  {% else %}
+    {% include "components/icon.html" with name="layers" size=36 class="brand__mark" stroke="1.8" %}
+  {% endif %}
+  <span class="brand__text">
+    <span class="brand__name">{% if org %}{{ org.name }}{% else %}{{ PRODUCT_NAME }}{% endif %}</span>
+    {% if not org %}<span class="brand__tag">{{ PRODUCT_TAGLINE }}</span>{% endif %}
+  </span>
+</a>

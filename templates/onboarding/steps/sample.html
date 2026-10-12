@@ -1,0 +1,15 @@
+{% extends "onboarding/_wizard.html" %}
+{% block step_title %}Start with sample data?{% endblock %}
+{% block step_sub %}Sample {% term "contact" plural=True lower=True %}, {% term "lead" plural=True lower=True %} and {% term "product" plural=True lower=True %} for {% if pack %}a typical {{ pack.name|lower }} business{% else %}your industry{% endif %} help you explore. You can clear them later.{% endblock %}
+{% block step %}
+<div class="option-grid" role="radiogroup" aria-label="Sample data">
+  {% for value, label in form.fields.sample.choices %}
+    <label class="option-card">
+      <input type="radio" name="sample" value="{{ value }}"{% if form.sample.value|stringformat:"s" == value %} checked{% endif %}>
+      <span class="option-card__icon">{% if value == "yes" %}{% include "components/icon.html" with name="box" size=22 %}{% else %}{% include "components/icon.html" with name="file" size=22 %}{% endif %}</span>
+      <span class="option-card__title">{{ label }}</span>
+    </label>
+  {% endfor %}
+</div>
+{% if not loaders_ready %}<p class="text-sm text-muted mt-3">{% include "components/icon.html" with name="clock" size=14 class="inline-icon" %} Sample records are added as each module goes live, starting with the CRM.</p>{% endif %}
+{% endblock %}

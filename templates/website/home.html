@@ -1,0 +1,30 @@
+{% load static %}<!doctype html>
+<html lang="en-GB" style="{{ brand_css }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>{{ org.name }}</title>
+  <meta name="description" content="{{ org.name }}">
+  <meta property="og:title" content="{{ org.name }}">
+  <link rel="stylesheet" href="{% static 'css/tokens.css' %}">
+  <link rel="stylesheet" href="{% static 'css/base.css' %}">
+  <link rel="stylesheet" href="{% static 'css/components.css' %}">
+  <link rel="stylesheet" href="{% static 'css/platform.css' %}">
+</head>
+<body>
+  <div class="public-holding">
+    <main class="public-holding__hero">
+      <div>
+        {% if org.logo %}<img class="public-holding__logo" src="{{ SITE_URL }}{% gurl 'core:org_logo' org.slug %}" alt="{{ org.name }} logo">{% endif %}
+        <h1>{{ org.name }}</h1>
+        <p class="mt-3">Our new website is on its way.</p>
+        {% if org.email or org.phone %}
+          <p class="mt-4">{% if org.phone %}<a class="btn btn--primary" style="background: var(--c-white); color: var(--c-primary);" href="tel:{{ org.phone }}">Call {{ org.phone }}</a>{% endif %}
+          {% if org.email %}<a class="btn btn--secondary" href="mailto:{{ org.email }}">Email us</a>{% endif %}</p>
+        {% endif %}
+      </div>
+    </main>
+    <footer>© {% now "Y" %} {{ org.legal_name|default:org.name }}{% if org.address %} · {{ org.address }}{% endif %}</footer>
+  </div>
+</body>
+</html>

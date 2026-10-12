@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{# Wizard frame: progress bar, step title, the step's form, Back / Continue. hx-boost keeps it fast and resumable. #}
+{% block title %}{{ page_title }}{% endblock %}
+{% block body_class %}{% endblock %}
+{% block body %}
+<div class="wizard-page">
+  <header class="wizard-top">
+    {% include "components/brand.html" with home="/orgs/" org=session.organization %}
+    <form method="post" action="{% url 'accounts:logout' %}">{% csrf_token %}<button class="btn btn--sm btn--ghost" style="color: var(--c-sidebar-text);" type="submit">Sign out</button></form>
+  </header>
+  <main class="wizard-body" id="main" hx-boost="true" hx-target="body" hx-swap="innerHTML show:window:top">
+    <div class="wizard">
+      <nav class="wizard__progress" aria-label="Set-up progress">
+        {% for s in steps %}
+          {% if s.reached and not s.current %}<a href="{{ s.url }}" class="is-done" title="{{ s.title }}" aria-label="Back to {{ s.title }}"></a>
+          {% else %}<span class="{% if s.current %}is-current{% endif %}" title="{{ s.title }}"{% if s.current %} aria-current="step"{% endif %}></span>{% endif %}
+        {% endfor %}
+      </nav>
+      <p class="wizard__count mb-2">Step {{ number }} of {{ total }}</p>
+      <h1>{% block step_title %}{{ title }}{% endblock %}</h1>
+      <p class="page-header__sub mb-4">{% block step_sub %}{% endblock %}</p>
+      <form method="post" enctype="multipart/form-data" novalidate>
+        {% csrf_token %}
+        {% if form.non_field_errors %}<div class="banner banner--danger" role="alert">{{ form.non_field_errors.0 }}</div>{% endif %}
+        {% block step %}{% endblock %}
+        <div class="wizard__actions">
+          {% if back_url %}<a class="btn btn--ghost" href="{{ back_url }}">{% include "components/icon.html" with name="chevron-left" size=18 %} Back</a>{% else %}<span></span>{% endif %}
+          <button type="submit" class="btn btn--primary">{% block next_label %}Continue{% endblock %} {% include "components/icon.html" with name="arrow-right" size=18 %}</button>
+        </div>
+      </form>
+    </div>
+  </main>
+</div>
+<div id="toasts" class="toasts" aria-live="polite"></div>
+{% endblock %}

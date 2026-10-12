@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1>Welcome{% if request.user.get_short_name %}, {{ request.user.get_short_name }}{% endif %}</h1>
+    <p class="page-header__sub">{{ org.name }}{% if sub_niche %} · {{ sub_niche.name }}{% elif pack %} · {{ pack.name }}{% endif %}</p>
+  </div>
+  {% if can.settings.manage_team %}<div class="page-header__actions"><a class="btn btn--secondary" href="{% url 'orgsettings:members' %}">{% include "components/icon.html" with name="user-plus" size=18 %} Invite people</a></div>{% endif %}
+</div>
+
+{% if show_checklist and not progress.complete %}
+<section class="card section" aria-labelledby="checklist-title">
+  <div class="card__header">
+    <div>
+      <h2 class="card__title" id="checklist-title">Getting started</h2>
+      <p class="card__sub">{{ progress.done }} of {{ progress.total }} done</p>
+    </div>
+    {% if can.settings.edit %}<form method="post" action="{% url 'core:checklist_tick' 'dismiss' %}">{% csrf_token %}<button class="btn btn--ghost btn--sm" type="submit">Hide</button></form>{% endif %}
+  </div>
+  <div class="progress mb-4" role="progressbar" aria-valuenow="{{ progress.percent }}" aria-valuemin="0" aria-valuemax="100"><div class="progress__bar" style="width: {{ progress.percent }}%"></div></div>
+  <ul class="checklist">
+    {% for item in progress.items %}
+      <li class="checklist__item{% if item.done %} is-done{% endif %}">
+        <span class="checklist__tick" aria-hidden="true">{% if item.done %}{% include "components/icon.html" with name="check" size=14 stroke="3" %}{% endif %}</span>
+        <div class="flex-1">
+          <div class="checklist__title">{{ item.title }}<span class="visually-hidden">{% if item.done %} (done){% endif %}</span></div>
+          <div class="text-sm text-muted">{{ item.description }}</div>
+        </div>
+        {% if not item.done %}
+          {% if item.url %}<a class="btn btn--sm btn--secondary" href="{{ item.url }}">Open</a>{% endif %}
+          {% if item.manual %}<form method="post" action="{% url 'core:checklist_tick' item.key %}">{% csrf_token %}<button class="btn btn--sm btn--ghost" type="submit">Mark done</button></form>{% endif %}
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}
+
+<div class="grid-4 kpis-2up section">
+  {% include "components/kpi_card.html" with label="Plan" value=org.effective_plan.name icon="zap" text_value=True %}
+  {% include "components/kpi_card.html" with label="Team members" value=member_count icon="users" %}
+  {% include "components/kpi_card.html" with label="Modules on" value=enabled_modules|length icon="grid" %}
+  {% if org.trial_days_left is not None %}{% include "components/kpi_card.html" with label="Trial days left" value=org.trial_days_left icon="clock" %}{% else %}{% include "components/kpi_card.html" with label="Status" value=org.get_status_display icon="activity" text_value=True %}{% endif %}
+</div>
+
+<section class="section" aria-labelledby="modules-title">
+  <h2 id="modules-title" class="mb-3">Your modules</h2>
+  <div class="grid-auto">
+    {% for m in enabled_modules %}
+      {% if m.url %}
+        <a class="card module-tile" href="{{ m.url }}">
+          <span class="module-tile__icon">{% include "components/icon.html" with name=m.entry.icon size=24 %}</span>
+          <span class="fw-700">{{ m.name }}</span>
+          <p class="module-tile__desc">{{ m.entry.description }}</p>
+        </a>
+      {% else %}
+        <div class="card module-tile is-soon">
+          <span class="module-tile__icon">{% include "components/icon.html" with name=m.entry.icon size=24 %}</span>
+          <span class="fw-700">{{ m.name }} <span class="soon">Coming soon</span></span>
+          <p class="module-tile__desc">{{ m.entry.description }}</p>
+        </div>
+      {% endif %}
+    {% empty %}
+      <div class="card">{% include "components/empty_state.html" with title="No modules switched on" message="Choose modules in Settings." icon="grid" %}</div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

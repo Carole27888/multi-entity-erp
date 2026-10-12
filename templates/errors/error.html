@@ -1,0 +1,22 @@
+{% load static %}<!doctype html>
+<html lang="en-GB" style="{{ brand_css }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>{{ title }} · {{ PRODUCT_NAME|default:"Error" }}</title>
+  <link rel="stylesheet" href="{% static 'css/tokens.css' %}">
+  <link rel="stylesheet" href="{% static 'css/base.css' %}">
+  <link rel="stylesheet" href="{% static 'css/components.css' %}">
+</head>
+<body>
+  <main class="standalone-page">
+    <div>
+      {% include "components/icon.html" with name="layers" class="brand__mark" size=64 stroke="1.6" %}
+      <p class="fw-800" style="letter-spacing: .08em; color: var(--c-white);">{{ code }}</p>
+      <h1>{{ title }}</h1>
+      <p class="mt-2">{{ message }}</p>
+      <a class="btn btn--primary mt-4" href="/">Go to the start page</a>
+    </div>
+  </main>
+</body>
+</html>

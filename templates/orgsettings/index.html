@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+{% include "components/page_header.html" with title="Settings" subtitle="Your organization's profile, team, roles and modules." %}
+<div class="grid-auto">
+  <a class="card module-tile" href="{% url 'orgsettings:profile' %}">
+    <span class="module-tile__icon">{% include "components/icon.html" with name="image" size=24 %}</span>
+    <span class="fw-700">Profile & branding</span>
+    <p class="module-tile__desc">Name, logo, brand colour, contact details, country, currency and time zone.</p>
+  </a>
+  <a class="card module-tile" href="{% url 'orgsettings:modules' %}">
+    <span class="module-tile__icon">{% include "components/icon.html" with name="grid" size=24 %}</span>
+    <span class="fw-700">Modules</span>
+    <p class="module-tile__desc">Switch modules on or off for everyone in {{ org.name }}.</p>
+  </a>
+  {% if can.settings.manage_team %}
+  <a class="card module-tile" href="{% url 'orgsettings:members' %}">
+    <span class="module-tile__icon">{% include "components/icon.html" with name="users" size=24 %}</span>
+    <span class="fw-700">Team</span>
+    <p class="module-tile__desc">{{ seats }}{% if seat_limit %} of {{ seat_limit }}{% endif %} seats used. Invite people and change their roles.</p>
+  </a>
+  <a class="card module-tile" href="{% url 'orgsettings:departments' %}">
+    <span class="module-tile__icon">{% include "components/icon.html" with name="columns" size=24 %}</span>
+    <span class="fw-700">Departments</span>
+    <p class="module-tile__desc">{{ department_count }} department{{ department_count|pluralize }}. Managers see their department's records.</p>
+  </a>
+  {% endif %}
+  {% if can.settings.manage_roles %}
+  <a class="card module-tile" href="{% url 'orgsettings:roles' %}">
+    <span class="module-tile__icon">{% include "components/icon.html" with name="key" size=24 %}</span>
+    <span class="fw-700">Roles & permissions</span>
+    <p class="module-tile__desc">{{ role_count }} roles. Build your own from the permission matrix.</p>
+  </a>
+  {% endif %}
+</div>
+{% endblock %}

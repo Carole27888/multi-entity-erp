@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+{% include "components/page_header.html" with title="Security" subtitle="Your sign-in protection, for every organization you belong to." %}
+{% if impersonating %}<div class="banner banner--warning mb-4">{% include "components/icon.html" with name="lock" size=18 %} Security settings can't be changed while impersonating.</div>{% endif %}
+<div class="grid-2 section" style="align-items: start;">
+  <div class="card">
+    <div class="card__header"><h2 class="card__title">Two-factor login</h2>
+      {% if request.user.totp_enabled %}<span class="pill pill--success">On</span>{% else %}<span class="pill pill--warning">Off</span>{% endif %}</div>
+    {% if request.user.totp_enabled %}
+      <p class="text-sm">Signing in needs your password and a code from your authenticator app. Turned on {{ request.user.totp_enabled_at|date:"j M Y" }}.</p>
+      <p class="text-sm"><b>{{ backup_left }}</b> backup code{{ backup_left|pluralize }} left.</p>
+      <form method="post" class="stack mt-3" style="gap: 12px;" novalidate>{% csrf_token %}
+        {% include "components/field.html" with field=form.code %}
+        <div class="flex gap-2 flex-wrap">
+          <button class="btn btn--secondary" name="action" value="backup_codes" type="submit">Create new backup codes</button>
+          {% if not request.user.two_factor_required %}<button class="btn btn--ghost" name="action" value="disable" type="submit">Turn off</button>{% endif %}
+        </div>
+      </form>
+      {% if request.user.two_factor_required %}<p class="text-sm text-muted mt-3">One of your roles must use two-factor login, so it can't be turned off. If you lose your phone, use a backup code or ask an administrator to reset it.</p>{% endif %}
+    {% else %}
+      <p class="text-sm">Add a code from your phone to your sign-in, so a stolen password alone can't open your account.</p>
+      <a class="btn btn--primary mt-2" href="{% url 'accounts:two_factor_setup' %}">Set up two-factor login</a>
+    {% endif %}
+  </div>
+  <div class="card">
+    <div class="card__header"><h2 class="card__title">Password and sessions</h2></div>
+    {% if session_hours %}<p class="text-sm">Because one of your roles handles money or settings, you're signed out after <b>{{ session_hours }} hours</b>, even with “Keep me signed in” ticked.</p>
+    {% else %}<p class="text-sm">With “Keep me signed in” ticked you stay signed in on this device for up to 30 days. Otherwise you're signed out when the browser closes.</p>{% endif %}
+    <p class="text-sm text-muted">Signed in as {{ request.user.email }}.</p>
+    <a class="btn btn--secondary mt-2" href="{% url 'accounts:password_change' %}">{% include "components/icon.html" with name="key" size=16 %} Change password</a>
+  </div>
+</div>
+{% endblock %}

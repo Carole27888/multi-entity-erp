@@ -1,0 +1,22 @@
+{% extends "onboarding/_wizard.html" %}
+{% block step_title %}What's your industry?{% endblock %}
+{% block step_sub %}We'll switch on the right modules and use your industry's words, stages and documents. You can add another industry later.{% endblock %}
+{% block step %}
+<div x-data="{ q: '' }">
+  <div class="field search-input mb-4">
+    <label for="industry-search" class="visually-hidden">Search industries</label>
+    {% include "components/icon.html" with name="search" size=18 %}
+    <input id="industry-search" type="search" class="input" placeholder="Search, e.g. safari, clinic, garage" x-model="q" autocomplete="off">
+  </div>
+  {% for e in form.industry.errors %}<div class="banner banner--danger" role="alert">Choose an industry to continue.</div>{% endfor %}
+  <div class="option-grid" role="radiogroup" aria-label="Industry">
+    {% for p in packs %}
+      <label class="option-card" x-show="!q || '{{ p.search_text|escapejs }}'.includes(q.toLowerCase())">
+        <input type="radio" name="industry" value="{{ p.key }}"{% if form.industry.value == p.key %} checked{% endif %} required>
+        <span class="option-card__icon">{% include "components/icon.html" with name=p.icon size=22 %}</span>
+        <span><span class="option-card__title block">{{ p.name }}</span><span class="option-card__desc block">{{ p.tagline }}</span></span>
+      </label>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

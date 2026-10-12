@@ -1,0 +1,16 @@
+{% extends "accounts/_simple_card.html" %}
+{% block title %}Join {{ org.name }}{% endblock %}
+{% block heading %}Join {{ org.name }}{% endblock %}
+{% block inner %}
+<p class="page-header__sub mb-4">{% if inv.invited_by %}{{ inv.invited_by.full_name }} invited you{% else %}You're invited{% endif %} as <b>{{ inv.role.name }}</b>. The invitation is for <b>{{ inv.email }}</b>.</p>
+<form method="post" novalidate class="stack" style="gap: 14px;">{% csrf_token %}
+  {% if form %}
+    {% include "components/field.html" with field=form.full_name %}
+    {% include "components/field.html" with field=form.phone %}
+    {% include "components/field.html" with field=form.password %}
+    <button type="submit" class="btn btn--primary btn--block">Create my account and join</button>
+  {% else %}
+    <button type="submit" class="btn btn--primary btn--block">Join {{ org.name }}</button>
+  {% endif %}
+</form>
+{% endblock %}

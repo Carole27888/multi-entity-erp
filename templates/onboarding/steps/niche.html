@@ -1,0 +1,15 @@
+{% extends "onboarding/_wizard.html" %}
+{% block step_title %}Which best describes you?{% endblock %}
+{% block step_sub %}{{ pack.name }}: this fine-tunes your words and suggested modules.{% endblock %}
+{% block step %}
+{% for e in form.sub_niche.errors %}<div class="banner banner--danger" role="alert">Choose one to continue.</div>{% endfor %}
+<div class="option-grid" role="radiogroup" aria-label="Type of business">
+  {% for s in pack.sub_niches %}
+    <label class="option-card">
+      <input type="radio" name="sub_niche" value="{{ s.key }}"{% if form.sub_niche.value == s.key %} checked{% endif %} required>
+      <span class="option-card__icon">{% include "components/icon.html" with name=pack.icon size=22 %}</span>
+      <span><span class="option-card__title block">{{ s.name }}</span>{% if s.description %}<span class="option-card__desc block">{{ s.description }}</span>{% endif %}</span>
+    </label>
+  {% endfor %}
+</div>
+{% endblock %}

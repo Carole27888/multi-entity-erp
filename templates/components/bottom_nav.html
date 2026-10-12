@@ -1,0 +1,13 @@
+{% if bottom_nav %}
+<nav class="bottom-nav" aria-label="Quick navigation">
+  {% for item in bottom_nav %}
+    <a class="bottom-nav__item {% if item.active %}is-active{% endif %}" href="{{ item.url }}"{% if item.active %} aria-current="page"{% endif %}>
+      {% include "components/icon.html" with name=item.icon size=22 %}
+      <span>{{ item.label }}</span>
+    </a>
+  {% endfor %}
+  <button type="button" class="bottom-nav__item" @click="drawer = true" aria-controls="sidebar">
+    {% include "components/icon.html" with name="menu" size=22 %}<span>Menu</span>
+  </button>
+</nav>
+{% endif %}

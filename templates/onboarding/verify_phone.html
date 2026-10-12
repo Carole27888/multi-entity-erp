@@ -1,0 +1,12 @@
+{% extends "accounts/_simple_card.html" %}
+{% block title %}Confirm your phone{% endblock %}
+{% block heading %}Confirm your phone{% endblock %}
+{% block inner %}
+<p class="page-header__sub mb-4">We sent a 6-digit code by SMS to <b>{{ request.user.phone }}</b>.</p>
+<form method="post" novalidate class="stack" style="gap: 14px;">{% csrf_token %}
+  {% include "components/field.html" with field=form.code %}
+  <button type="submit" class="btn btn--primary btn--block">Confirm</button>
+</form>
+<form method="post" class="mt-2">{% csrf_token %}<button class="btn btn--ghost btn--block" name="action" value="resend" type="submit">Send a new code</button></form>
+<a class="text-sm mt-3 block" href="{% url 'onboarding:start' %}">Skip for now</a>
+{% endblock %}

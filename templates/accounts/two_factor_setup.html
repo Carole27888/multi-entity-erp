@@ -1,0 +1,22 @@
+{% extends "base_auth.html" %}
+{% block title %}Set up two-factor login{% endblock %}
+{% block card %}
+<div class="card auth-box">
+  <h1>Set up two-factor login</h1>
+  <p class="page-header__sub mb-3">{% if required %}Your role can see money, staff or settings, so signing in needs a code from your phone as well as your password.{% else %}Protect your account with a code from your phone as well as your password.{% endif %}</p>
+  <ol class="text-sm stack" style="gap: 8px; padding-left: 18px;">
+    <li>Install an authenticator app on your phone: <b>Google Authenticator</b>, <b>Microsoft Authenticator</b> or <b>Authy</b>.</li>
+    <li>In the app, tap <b>+</b> and scan this QR code:</li>
+  </ol>
+  <div class="qr-box" aria-label="QR code for your authenticator app">{{ qr }}</div>
+  <details class="text-sm mt-2"><summary>Can't scan? Enter this key instead</summary>
+    <p class="mt-2">Account: <b>{{ email }}</b><br>Key: <code class="totp-key">{{ secret }}</code><br>Type: time-based</p></details>
+  <form method="post" novalidate class="stack mt-3" style="gap: 14px;">
+    {% csrf_token %}
+    <p class="text-sm mb-0">3. Enter the 6-digit code the app now shows:</p>
+    {% include "components/field.html" with field=form.code %}
+    <button type="submit" class="btn btn--primary btn--block">Turn on and continue</button>
+  </form>
+  {% if during_login %}<p class="text-sm mt-3"><a href="{% url 'accounts:login' %}">← Back to sign in</a></p>{% elif not required %}<p class="text-sm mt-3"><a href="{% url 'accounts:security' %}">← Back to Security</a></p>{% endif %}
+</div>
+{% endblock %}

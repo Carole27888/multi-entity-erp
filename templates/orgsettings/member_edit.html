@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+{% include "components/page_header.html" with title=member.user.full_name subtitle=member.user.email %}
+<div class="card" style="max-width: 640px;">
+  {% if form.non_field_errors %}<div class="banner banner--danger" role="alert">{{ form.non_field_errors.0 }}</div>{% endif %}
+  <form method="post" novalidate class="stack">{% csrf_token %}
+    {% include "components/field.html" with field=form.role %}
+    {% include "components/field.html" with field=form.title %}
+    {% if form.departments.field.queryset.exists %}{% include "components/field.html" with field=form.departments %}{% else %}<p class="text-sm text-muted">No departments yet. <a href="{% url 'orgsettings:departments' %}">Add departments</a> to limit managers to their team's records.</p>{% endif %}
+    {% include "components/field.html" with field=form.status %}
+    <div class="flex gap-2"><button class="btn btn--primary" type="submit">Save</button><a class="btn btn--ghost" href="{% url 'orgsettings:members' %}">Cancel</a></div>
+  </form>
+</div>
+{% endblock %}

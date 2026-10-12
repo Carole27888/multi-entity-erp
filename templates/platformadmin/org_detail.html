@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-header">
+  <div><h1>{{ o.name }}</h1><p class="page-header__sub">/{{ o.slug }}/ · {{ o.get_status_display }}{% if o.suspended_reason %} · {{ o.suspended_reason }}{% endif %}</p></div>
+  <div class="page-header__actions"><a class="btn btn--ghost" href="{% url 'platformadmin:dashboard' %}">{% include "components/icon.html" with name="chevron-left" size=18 %} All organizations</a></div>
+</div>
+<div class="grid-4 kpis-2up section">
+  {% include "components/kpi_card.html" with label="Members" value=usage.members icon="users" %}
+  {% include "components/kpi_card.html" with label="Storage (MB)" value=usage.storage_mb icon="box" %}
+  {% include "components/kpi_card.html" with label="Queued jobs" value=usage.jobs_queued icon="clock" %}
+  {% include "components/kpi_card.html" with label="Failed jobs" value=usage.jobs_failed icon="alert" %}
+</div>
+<div class="grid-main-side section" style="align-items: start;">
+  <div class="card card--flush">
+    <div class="card__header" style="padding: 16px 20px 0;"><h2 class="card__title">Members</h2></div>
+    <div class="table-wrap"><table class="table table--stack">
+      <thead><tr><th>Name</th><th>Role</th><th>Status</th><th><span class="visually-hidden">Impersonate</span></th></tr></thead>
+      <tbody>{% for m in members %}
+        <tr>
+          <td data-label="Name"><div class="table__primary">{{ m.user.full_name }}</div><div class="table__sub">{{ m.user.email }}</div></td>
+          <td data-label="Role">{{ m.role.name }}</td>
+          <td data-label="Status">{{ m.get_status_display }}</td>
+          <td class="text-right" data-label="">{% if m.status == "active" and not m.user.is_platform_staff %}
+            <form method="post" action="{% url 'platformadmin:impersonate' o.pk m.pk %}">{% csrf_token %}<button class="btn btn--sm btn--secondary" type="submit">View as</button></form>{% endif %}</td>
+        </tr>{% endfor %}</tbody>
+    </table></div>
+  </div>
+  <div class="stack">
+    <div class="card">
+      <div class="card__header"><h2 class="card__title">Account</h2></div>
+      <div class="key-value"><span>Industry</span><b>{{ o.industry|default:"—" }}{% if o.sub_niche %} · {{ o.sub_niche }}{% endif %}</b></div>
+      <div class="key-value"><span>Plan</span><b>{{ o.plan.name|default:"—" }}</b></div>
+      <div class="key-value"><span>Trial ends</span><b>{{ o.trial_ends_at|date:"j M Y"|default:"—" }}</b></div>
+      <div class="key-value"><span>Modules</span><b class="text-right">{{ o.enabled_modules|join:", "|default:"—" }}</b></div>
+      {% if o.status == "suspended" %}
+        <form method="post" action="{% url 'platformadmin:org_restore' o.pk %}" class="mt-3">{% csrf_token %}<button class="btn btn--primary btn--block" type="submit">Restore</button></form>
+      {% else %}
+        <form method="post" action="{% url 'platformadmin:org_suspend' o.pk %}" class="stack mt-3">{% csrf_token %}
+          <label for="reason" class="fw-600">Reason for suspending</label>
+          <input id="reason" class="input" name="reason" required maxlength="255" placeholder="e.g. Terms of service breach">
+          <button class="btn btn--danger" type="submit">Suspend</button>
+        </form>
+      {% endif %}
+    </div>
+    <div class="card">
+      <div class="card__header"><h2 class="card__title">Audit log</h2></div>
+      <ul class="timeline">{% for e in log %}
+        <li class="timeline__item"><div class="fw-600">{{ e.action }}{% if e.target %} · {{ e.target }}{% endif %}</div>
+          <div class="timeline__meta">{{ e.created_at|date:"j M Y H:i" }} · {{ e.user|default:"system" }}{% if e.impersonator %} (by {{ e.impersonator }}){% endif %}</div></li>
+      {% empty %}<li class="text-sm text-muted">Nothing logged yet.</li>{% endfor %}</ul>
+    </div>
+  </div>
+</div>
+{% endblock %}

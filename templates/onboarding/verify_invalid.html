@@ -1,0 +1,7 @@
+{% extends "accounts/_simple_card.html" %}
+{% block title %}Link expired{% endblock %}
+{% block heading %}This link has expired{% endblock %}
+{% block inner %}
+<p>Confirmation links work for 3 days. Sign in and we'll send you a fresh one.</p>
+<a class="btn btn--primary btn--block mt-3" href="{% url 'onboarding:verify_pending' %}">Send a new link</a>
+{% endblock %}

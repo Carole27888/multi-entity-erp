@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+{% include "components/page_header.html" with title="Your organizations" subtitle="Choose where to work. You can switch at any time from the top bar." %}
+<div class="option-grid">
+  {% for m in memberships %}
+    {% with o=m.organization %}
+    <a class="option-card" href="{% if o.onboarding_completed_at %}{% org_url o %}{% else %}{% url 'onboarding:start' %}?org={{ o.slug }}{% endif %}" style="text-decoration: none; color: inherit;">
+      <span class="option-card__icon" aria-hidden="true">{% if o.logo %}<img src="{% url 'core:org_logo' o.slug %}" alt="" width="32" height="32" style="object-fit: contain;">{% else %}<span class="fw-800">{{ o.initials }}</span>{% endif %}</span>
+      <span class="flex-1">
+        <span class="option-card__title block">{{ o.name }}</span>
+        <span class="option-card__desc block">{{ m.role.name }}{% if not o.onboarding_completed_at %} · <b>continue set-up</b>{% elif o.status == "trial" %} · trial, {{ o.trial_days_left }} day{{ o.trial_days_left|pluralize }} left{% elif o.status != "active" %} · {{ o.get_status_display }}{% endif %}</span>
+      </span>
+      {% include "components/icon.html" with name="chevron-right" size=18 %}
+    </a>
+    {% endwith %}
+  {% empty %}
+    <div class="card">{% include "components/empty_state.html" with title="You're not in an organization yet" message="Create one now, or ask a colleague to invite you." %}</div>
+  {% endfor %}
+</div>
+<div class="mt-6 flex gap-3 flex-wrap">
+  <a class="btn btn--primary" href="{% url 'onboarding:start' %}?new=1">{% include "components/icon.html" with name="plus" size=18 %} Create an organization</a>
+  {% if request.user.is_platform_staff %}<a class="btn btn--secondary" href="{% url 'platformadmin:dashboard' %}">{% include "components/icon.html" with name="activity" size=18 %} Platform admin</a>{% endif %}
+</div>
+{% endblock %}

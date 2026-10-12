@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+{% if role %}{% include "components/page_header.html" with title=role.name subtitle="Custom role" %}{% else %}{% include "components/page_header.html" with title="New role" subtitle="Give it a name, then tick what it can do." %}{% endif %}
+<form method="post" novalidate>{% csrf_token %}
+  <div class="card section">
+    <div class="form-grid">
+      {% include "components/field.html" with field=form.name %}
+      {% include "components/field.html" with field=form.default_scope %}
+      {% include "components/field.html" with field=form.description span=True %}
+      {% include "components/field.html" with field=form.idle_timeout_minutes %}
+      {% include "components/field.html" with field=form.session_max_hours %}
+      {% include "components/field.html" with field=form.two_factor_required %}
+    </div>
+  </div>
+  {% include "orgsettings/_matrix.html" %}
+  <div class="flex gap-2 mt-4 flex-wrap">
+    <button class="btn btn--primary" type="submit">Save role</button>
+    <a class="btn btn--ghost" href="{% url 'orgsettings:roles' %}">Cancel</a>
+  </div>
+</form>
+{% if role %}
+<form method="post" action="{% url 'orgsettings:role_delete' role.pk %}" class="mt-6">{% csrf_token %}
+  <button class="btn btn--danger btn--sm" type="submit">{% include "components/icon.html" with name="trash" size=16 %} Delete role</button>
+</form>
+{% endif %}
+{% endblock %}
